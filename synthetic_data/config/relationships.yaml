@@ -1,0 +1,182 @@
+# relationships.yaml - Feature Dependency Configuration
+
+# Defines how features influence each other (Directed Acyclic Graph / DAG).
+# The Relationship Engine reads these rules and adjusts feature probabilities
+# accordingly - so no feature is generated in isolation.
+
+
+# DAG Definition
+# Each edge: source → target with conditional probability modifiers
+
+edges:
+  # Mother Education → Mother Working
+  - source: mother_education
+    target: mother_working
+    type: probability_modifier
+    rules:
+      - condition: {mother_education: "none"}
+        modifier: -0.20   # less likely to work
+      - condition: {mother_education: "primary"}
+        modifier: -0.05
+      - condition: {mother_education: "secondary"}
+        modifier: +0.10
+      - condition: {mother_education: "higher"}
+        modifier: +0.25
+
+  # Mother Education + Father Education → Family Income
+  - source: [mother_education, father_education]
+    target: family_income
+    type: category_shift
+    rules:
+      - condition: {mother_education: "higher", father_education: "higher"}
+        shift_toward: "high"
+        strength: 0.60
+      - condition: {mother_education: "secondary", father_education: "secondary"}
+        shift_toward: "medium"
+        strength: 0.50
+      - condition: {mother_education: "primary", father_education: "primary"}
+        shift_toward: "low"
+        strength: 0.50
+      - condition: {mother_education: "none", father_education: "none"}
+        shift_toward: "very_low"
+        strength: 0.65
+
+  # Family Income → House Density
+  - source: family_income
+    target: house_density
+    type: category_shift
+    rules:
+      - condition: {family_income: "very_low"}
+        shift_toward: "high"
+        strength: 0.55
+      - condition: {family_income: "low"}
+        shift_toward: "medium"
+        strength: 0.40
+      - condition: {family_income: "medium"}
+        shift_toward: "low"
+        strength: 0.35
+      - condition: {family_income: "high"}
+        shift_toward: "low"
+        strength: 0.60
+
+  # House Density + Family Income → Sanitation
+  - source: [house_density, family_income]
+    target: sanitation
+    type: category_shift
+    rules:
+      - condition: {house_density: "high", family_income: "very_low"}
+        shift_toward: "poor"
+        strength: 0.65
+      - condition: {house_density: "low", family_income: "high"}
+        shift_toward: "good"
+        strength: 0.65
+      - condition: {house_density: "medium", family_income: "medium"}
+        shift_toward: "fair"
+        strength: 0.50
+
+  # Sanitation + Family Income → Clean Water
+  - source: [sanitation, family_income]
+    target: clean_water
+    type: probability_modifier
+    rules:
+      - condition: {sanitation: "poor", family_income: "very_low"}
+        modifier: -0.35
+      - condition: {sanitation: "good", family_income: "high"}
+        modifier: +0.30
+      - condition: {sanitation: "fair"}
+        modifier: +0.05
+
+  # Family Income + Mother Education → Healthcare Access
+  - source: [family_income, mother_education]
+    target: healthcare_access
+    type: category_shift
+    rules:
+      - condition: {family_income: "very_low", mother_education: "none"}
+        shift_toward: "poor"
+        strength: 0.60
+      - condition: {family_income: "high", mother_education: "higher"}
+        shift_toward: "good"
+        strength: 0.65
+      - condition: {family_income: "medium"}
+        shift_toward: "fair"
+        strength: 0.40
+
+  # Healthcare Access → Immunization
+  - source: healthcare_access
+    target: immunization
+    type: category_shift
+    rules:
+      - condition: {healthcare_access: "poor"}
+        shift_toward: "none"
+        strength: 0.55
+      - condition: {healthcare_access: "fair"}
+        shift_toward: "partial"
+        strength: 0.45
+      - condition: {healthcare_access: "good"}
+        shift_toward: "complete"
+        strength: 0.60
+
+  # Clean Water + Sanitation → Diarrhea History
+  - source: [clean_water, sanitation, immunization]
+    target: diarrhea_history
+    type: probability_modifier
+    rules:
+      - condition: {clean_water: 0, sanitation: "poor"}
+        modifier: +0.35
+      - condition: {clean_water: 1, sanitation: "good", immunization: "complete"}
+        modifier: -0.25
+      - condition: {immunization: "none"}
+        modifier: +0.20
+
+  # Family Income + Mother Education → Protein Intake
+  - source: [family_income, mother_education]
+    target: protein_intake
+    type: category_shift
+    rules:
+      - condition: {family_income: "very_low"}
+        shift_toward: "low"
+        strength: 0.60
+      - condition: {family_income: "high", mother_education: "higher"}
+        shift_toward: "high"
+        strength: 0.55
+      - condition: {family_income: "medium"}
+        shift_toward: "medium"
+        strength: 0.40
+
+  # Family Income + Mother Education → Vitamin Intake
+  - source: [family_income, mother_education]
+    target: vitamin_intake
+    type: category_shift
+    rules:
+      - condition: {family_income: "very_low"}
+        shift_toward: "low"
+        strength: 0.55
+      - condition: {family_income: "high", mother_education: "higher"}
+        shift_toward: "high"
+        strength: 0.50
+
+  # Birth Weight → Birth Length (correlated)
+  - source: birth_weight
+    target: birth_length
+    type: correlation_adjustment
+    correlation: 0.75
+    description: "Low birth weight is correlated with short birth length"
+
+# Processing Order (topological sort of the DAG)
+processing_order:
+  - mother_education
+  - father_education
+  - mother_working
+  - father_working
+  - family_income
+  - house_density
+  - sanitation
+  - clean_water
+  - electricity
+  - healthcare_access
+  - immunization
+  - diarrhea_history
+  - protein_intake
+  - vitamin_intake
+  - birth_weight
+  - birth_length

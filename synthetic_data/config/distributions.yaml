@@ -1,0 +1,142 @@
+# distributions.yaml - Feature Distribution Configurations
+
+# Defines the marginal distribution for each feature.
+# The Relationship Engine will adjust these to model inter-feature dependencies.
+
+# Child Information
+child:
+  age_month:
+    distribution: uniform_int
+    min: 0
+    max: 59
+    description: "Child age in months (0-59, i.e., under 5 years)"
+
+  gender:
+    distribution: categorical
+    categories: ["M", "F"]
+    probabilities: [0.51, 0.49]
+    description: "Child biological sex"
+
+  birth_weight:
+    # Unit: kg | Normal range: 2.5-4.5 kg
+    distribution: normal
+    mean: 3.1
+    std: 0.45
+    clip_min: 1.5
+    clip_max: 5.0
+    description: "Birth weight in kilograms"
+
+  birth_length:
+    # Unit: cm | Normal range: 45-55 cm
+    distribution: normal
+    mean: 49.5
+    std: 2.5
+    clip_min: 40.0
+    clip_max: 60.0
+    description: "Birth length in centimeters"
+
+# Mother Information
+mother:
+  mother_age:
+    distribution: normal
+    mean: 28.0
+    std: 6.0
+    clip_min: 15
+    clip_max: 50
+    description: "Mother age in years"
+
+  mother_education:
+    distribution: categorical
+    categories: ["none", "primary", "secondary", "higher"]
+    probabilities: [0.10, 0.30, 0.40, 0.20]
+    description: "Highest education level of the mother"
+
+  mother_working:
+    # Probability adjusted by relationship engine based on education
+    distribution: bernoulli
+    base_probability: 0.40
+    description: "Whether the mother is employed (1=yes, 0=no)"
+
+# Father Information
+father:
+  father_education:
+    distribution: categorical
+    categories: ["none", "primary", "secondary", "higher"]
+    probabilities: [0.08, 0.28, 0.42, 0.22]
+    description: "Highest education level of the father"
+
+  father_working:
+    distribution: bernoulli
+    base_probability: 0.85
+    description: "Whether the father is employed (1=yes, 0=no)"
+
+# Household
+household:
+  family_income:
+    # Adjusted by relationship engine based on parental education
+    distribution: categorical
+    categories: ["very_low", "low", "medium", "high"]
+    probabilities: [0.20, 0.35, 0.30, 0.15]
+    description: "Household monthly income tier"
+
+  sanitation:
+    distribution: categorical
+    categories: ["poor", "fair", "good"]
+    probabilities: [0.25, 0.40, 0.35]
+    description: "Sanitation facility quality"
+
+  clean_water:
+    distribution: bernoulli
+    base_probability: 0.65
+    description: "Access to clean water (1=yes, 0=no)"
+
+  electricity:
+    distribution: bernoulli
+    base_probability: 0.85
+    description: "Access to electricity (1=yes, 0=no)"
+
+  house_density:
+    distribution: categorical
+    categories: ["low", "medium", "high"]
+    probabilities: [0.30, 0.45, 0.25]
+    description: "Household occupancy density"
+
+# Nutrition
+nutrition:
+  exclusive_breastfeeding:
+    distribution: bernoulli
+    base_probability: 0.55
+    description: "Whether child received exclusive breastfeeding for 6 months (1=yes, 0=no)"
+
+  protein_intake:
+    # Adjusted by income and education via relationship engine
+    distribution: categorical
+    categories: ["low", "medium", "high"]
+    probabilities: [0.30, 0.45, 0.25]
+    description: "Daily protein intake adequacy"
+
+  vitamin_intake:
+    distribution: categorical
+    categories: ["low", "medium", "high"]
+    probabilities: [0.25, 0.45, 0.30]
+    description: "Micronutrient (vitamins/minerals) intake adequacy"
+
+# Healthcare
+healthcare:
+  immunization:
+    # Adjusted by healthcare_access via relationship engine
+    distribution: categorical
+    categories: ["none", "partial", "complete"]
+    probabilities: [0.10, 0.30, 0.60]
+    description: "Immunization completeness status"
+
+  diarrhea_history:
+    distribution: bernoulli
+    base_probability: 0.30
+    description: "History of diarrhea in past 3 months (1=yes, 0=no)"
+
+  healthcare_access:
+    distribution: categorical
+    categories: ["poor", "fair", "good"]
+    probabilities: [0.20, 0.40, 0.40]
+    description: "Proximity and availability of healthcare facilities"

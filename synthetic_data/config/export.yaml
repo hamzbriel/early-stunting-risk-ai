@@ -1,0 +1,59 @@
+# export.yaml - Export & Reporting Configuration
+
+export:
+  # Output file names
+  files:
+    train: "train.csv"
+    validation: "validation.csv"
+    test: "test.csv"
+    metadata: "metadata.json"
+    statistics: "statistics.json"
+    relationships: "relationships.json"
+    risk_summary: "risk_summary.json"
+    data_dictionary: "data_dictionary.csv"
+
+  # CSV options
+  csv:
+    index: false
+    encoding: "utf-8"
+    float_format: "%.4f"
+
+  # Column order in output CSVs
+  column_order:
+    - age_month
+    - gender
+    - birth_weight
+    - birth_length
+    - mother_age
+    - mother_education
+    - mother_working
+    - father_education
+    - father_working
+    - family_income
+    - sanitation
+    - clean_water
+    - electricity
+    - house_density
+    - exclusive_breastfeeding
+    - protein_intake
+    - vitamin_intake
+    - immunization
+    - diarrhea_history
+    - healthcare_access
+    - risk_score
+    - risk_level
+
+reports:
+  # Report file names
+  files:
+    quality: "quality_report.html"
+    distribution: "distribution_report.html"
+    correlation: "correlation_report.html"
+
+  # Report styling
+  theme: "professional"    # controls color scheme in reports
+  include_plots: true
+  max_correlation_features: 20
+
+  # Whether to open reports in browser after generation
+  auto_open: false

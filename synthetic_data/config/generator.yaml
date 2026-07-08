@@ -1,0 +1,44 @@
+# generator.yaml - Main Generator Configuration
+
+# Controls the overall synthetic data generation pipeline.
+# All other config files are referenced from here.
+
+generator:
+  # Total number of records to generate (before splitting)
+  n_samples: 10000
+
+  # Random seed for full reproducibility
+  seed: 42
+
+  # Version tag - used in metadata output
+  version: "1.0.0"
+
+  # Dataset description
+  description: "Synthetic dataset for early stunting risk prediction"
+
+  # Split ratios - must sum to 1.0
+  split:
+    train: 0.70
+    validation: 0.15
+    test: 0.15
+
+  # Stratify split by risk_level to ensure balanced class distribution
+  stratify_column: "risk_level"
+
+  # Output directory (relative to synthetic_data/)
+  output_dir: "output"
+  reports_dir: "reports"
+
+  # Config file references
+  config_files:
+    distributions: "distributions.yaml"
+    relationships: "relationships.yaml"
+    risk_rules: "risk_rules.yaml"
+    validation: "validation.yaml"
+    export: "export.yaml"
+
+  # Logging level: DEBUG, INFO, WARNING, ERROR
+  log_level: "INFO"
+
+  # Whether to save intermediate pipeline steps for debugging
+  debug_mode: false

@@ -1,0 +1,164 @@
+# risk_rules.yaml - Risk Scoring Configuration
+
+# Defines weighted scoring rules for risk_score and threshold for risk_level.
+# Risk = Weighted Score + Interaction Effects + Gaussian Noise
+
+# Feature Weights (must sum to 1.0)
+# Based on public health literature on stunting risk factors
+weights:
+  birth_weight: 0.18       # Low birth weight is the strongest single predictor
+  protein_intake: 0.14     # Chronic protein deficiency is directly causal
+  family_income: 0.12      # Socioeconomic status underlies many risk factors
+  sanitation: 0.11         # Poor sanitation → infection → stunting pathway
+  mother_education: 0.10   # Education affects feeding practices and care
+  clean_water: 0.09        # Waterborne disease pathway
+  diarrhea_history: 0.08   # Repeated diarrhea directly impairs growth
+  immunization: 0.07       # Immunization prevents infections
+  birth_length: 0.06       # Correlated with birth weight
+  healthcare_access: 0.05  # Preventive and curative care access
+
+# Feature Scoring - Maps each categorical/binary value to a 0–100 score
+# Higher score = higher risk contribution for this feature
+scoring:
+  # Continuous features - normalized to 0-100 risk scale
+  birth_weight:
+    type: continuous_inverse   # lower weight → higher risk
+    reference_min: 1.5
+    reference_max: 5.0
+    risk_at_min: 95            # weight=1.5 kg → very high risk
+    risk_at_max: 5             # weight=5.0 kg → very low risk
+
+  birth_length:
+    type: continuous_inverse
+    reference_min: 40.0
+    reference_max: 60.0
+    risk_at_min: 90
+    risk_at_max: 5
+
+  # Categorical features
+  protein_intake:
+    type: categorical
+    mapping:
+      low: 85
+      medium: 45
+      high: 10
+
+  family_income:
+    type: categorical
+    mapping:
+      very_low: 90
+      low: 65
+      medium: 35
+      high: 10
+
+  sanitation:
+    type: categorical
+    mapping:
+      poor: 85
+      fair: 45
+      good: 10
+
+  mother_education:
+    type: categorical
+    mapping:
+      none: 80
+      primary: 55
+      secondary: 30
+      higher: 10
+
+  clean_water:
+    type: binary
+    mapping:
+      0: 80    # no clean water → high risk
+      1: 15    # has clean water → low risk
+
+  diarrhea_history:
+    type: binary
+    mapping:
+      0: 10    # no diarrhea history → low risk
+      1: 85    # diarrhea history → high risk
+
+  immunization:
+    type: categorical
+    mapping:
+      none: 80
+      partial: 45
+      complete: 10
+
+  healthcare_access:
+    type: categorical
+    mapping:
+      poor: 80
+      fair: 40
+      good: 10
+
+# Interaction Effects
+# Some combinations of risk factors amplify or reduce the total risk
+interactions:
+  # Synergistic: multiple severe factors compound the risk
+  - name: "severe_poverty_poor_sanitation"
+    conditions:
+      family_income: "very_low"
+      sanitation: "poor"
+    risk_bonus: +8.0
+
+  - name: "low_birth_weight_low_protein"
+    conditions:
+      birth_weight_below: 2.5
+      protein_intake: "low"
+    risk_bonus: +7.0
+
+  - name: "no_clean_water_diarrhea"
+    conditions:
+      clean_water: 0
+      diarrhea_history: 1
+    risk_bonus: +6.0
+
+  - name: "uneducated_mother_low_income"
+    conditions:
+      mother_education: "none"
+      family_income: "very_low"
+    risk_bonus: +5.0
+
+  # Protective: multiple positive factors reduce the risk
+  - name: "educated_mother_high_income"
+    conditions:
+      mother_education: "higher"
+      family_income: "high"
+    risk_reduction: -7.0
+
+  - name: "good_sanitation_clean_water_immunized"
+    conditions:
+      sanitation: "good"
+      clean_water: 1
+      immunization: "complete"
+    risk_reduction: -6.0
+
+# Noise added to risk_score after scoring
+# Simulates real-world measurement uncertainty
+risk_noise:
+  gaussian_std: 3.5      # standard deviation of additive Gaussian noise
+
+# Risk Level Thresholds
+# risk_score (0–100) → risk_level category
+thresholds:
+  low:
+    min: 0
+    max: 35
+    label: "Low"
+
+  medium:
+    min: 36
+    max: 65
+    label: "Medium"
+
+  high:
+    min: 66
+    max: 100
+    label: "High"
+
+# Target Class Distribution (approximate) - used for validation
+expected_distribution:
+  Low: 0.35
+  Medium: 0.40
+  High: 0.25

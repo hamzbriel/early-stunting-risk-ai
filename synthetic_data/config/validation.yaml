@@ -1,0 +1,135 @@
+# validation.yaml - Dataset Validation Rules
+
+# Defines all validation rules applied after data generation.
+# Validation Engine reads these rules and emits warnings/errors.
+
+# Range Validation - numeric columns must be within these bounds
+range_rules:
+  age_month:
+    min: 0
+    max: 59
+    type: integer
+
+  birth_weight:
+    min: 1.0
+    max: 6.0
+    type: float
+
+  birth_length:
+    min: 35.0
+    max: 65.0
+    type: float
+
+  mother_age:
+    min: 12
+    max: 55
+    type: integer
+
+  risk_score:
+    min: 0.0
+    max: 100.0
+    type: float
+
+# Category Validation - categorical columns must only contain these values
+category_rules:
+  gender:
+    allowed: ["M", "F"]
+
+  mother_education:
+    allowed: ["none", "primary", "secondary", "higher"]
+
+  father_education:
+    allowed: ["none", "primary", "secondary", "higher"]
+
+  family_income:
+    allowed: ["very_low", "low", "medium", "high"]
+
+  sanitation:
+    allowed: ["poor", "fair", "good"]
+
+  house_density:
+    allowed: ["low", "medium", "high"]
+
+  protein_intake:
+    allowed: ["low", "medium", "high"]
+
+  vitamin_intake:
+    allowed: ["low", "medium", "high"]
+
+  immunization:
+    allowed: ["none", "partial", "complete"]
+
+  healthcare_access:
+    allowed: ["poor", "fair", "good"]
+
+  risk_level:
+    allowed: ["Low", "Medium", "High"]
+
+# Binary Validation - must be 0 or 1
+binary_rules:
+  - mother_working
+  - father_working
+  - clean_water
+  - electricity
+  - exclusive_breastfeeding
+  - diarrhea_history
+
+# Duplicate Validation
+duplicate_rules:
+  check_exact_duplicates: true
+  max_duplicate_ratio: 0.01     # warn if >1% duplicates
+  error_on_exceed: false        # warn only, do not stop pipeline
+
+# Dependency Validation - logical consistency checks
+dependency_rules:
+  # A very high income household should not commonly have poor sanitation
+  - name: "income_sanitation_consistency"
+    condition:
+      family_income: "high"
+      sanitation: "poor"
+    max_proportion: 0.05      # warn if >5% of "high income" have "poor sanitation"
+    severity: "warning"
+
+  # Low income households should not commonly have high protein intake
+  - name: "income_protein_consistency"
+    condition:
+      family_income: "very_low"
+      protein_intake: "high"
+    max_proportion: 0.08
+    severity: "warning"
+
+  # Complete immunization is unlikely with poor healthcare access
+  - name: "healthcare_immunization_consistency"
+    condition:
+      healthcare_access: "poor"
+      immunization: "complete"
+    max_proportion: 0.10
+    severity: "warning"
+
+  # Educated mothers rarely have no immunization
+  - name: "education_immunization_consistency"
+    condition:
+      mother_education: "higher"
+      immunization: "none"
+    max_proportion: 0.05
+    severity: "warning"
+
+# Distribution Validation - check class balance
+distribution_rules:
+  risk_level:
+    expected:
+      Low: 0.35
+      Medium: 0.40
+      High: 0.25
+    tolerance: 0.10           # allow ±10% deviation
+    severity: "warning"
+
+# Missing Value Rules
+missing_value_rules:
+  max_missing_ratio_per_column: 0.05    # warn if >5% missing in any column
+  columns_no_missing_allowed:
+    - age_month
+    - gender
+    - birth_weight
+    - risk_score
+    - risk_level

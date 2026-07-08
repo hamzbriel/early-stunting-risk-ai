@@ -1,0 +1,110 @@
+# early-stunting-risk-ai - .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+.eggs/
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Distribution / Packaging
+build/
+dist/
+wheels/
+*.whl
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Linting & Type Checking
+.ruff_cache/
+.mypy_cache/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb_metadata/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# OS Specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Environment Variables & Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Model Artifacts (large binaries — tracked via Git LFS or excluded)
+model/trained_models/*
+!model/trained_models/.gitkeep
+
+model/artifacts/*
+!model/artifacts/.gitkeep
+
+model/metrics/*
+!model/metrics/.gitkeep
+
+model/explainability/*
+!model/explainability/.gitkeep
+
+# Synthetic Data Output (generated files — not tracked)
+synthetic_data/output/*
+!synthetic_data/output/.gitkeep
+
+synthetic_data/reports/*
+!synthetic_data/reports/.gitkeep
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+
+# Docker
+*.dockerignore
+
+# Node (if frontend tooling is added later)
+node_modules/
+.npm/
+.yarn/
