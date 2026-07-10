@@ -315,15 +315,168 @@ class QualityReportGenerator:
 
         logger.info("Exported HTML Quality Report: %s", dest_path.resolve())
 
-        # Also copy / write placeholders for distribution and correlation reports
-        # to ensure that all expected files requested by prompt exist
-        dist_path = reports_dir / "distribution_report.html"
-        corr_path = reports_dir / "correlation_report.html"
+        self._generate_distribution_report(df)
+        self._generate_correlation_report(df)
 
-        # Simpan link/redirect atau salinan ke main quality_report untuk kemudahan navigasi
-        with open(dist_path, "w", encoding="utf-8") as f:
-            f.write(html_content)
-        with open(corr_path, "w", encoding="utf-8") as f:
-            f.write(html_content)
+    def _generate_distribution_report(self, df: pd.DataFrame) -> None:
+        reports_dir = self.config.reports_dir
+        dest_path = reports_dir / "distribution_report.html"
 
-        logger.info("Exported distribution_report.html and correlation_report.html successfully.")
+        features = df.columns.tolist()
+        dist_rows = []
+        for col in features:
+            if pd.api.types.is_numeric_dtype(df[col]):
+                hist_bins = 20
+                col_data = df[col].dropna()
+                if len(col_data) == 0:
+                    continue
+                min_v, max_v = col_data.min(), col_data.max()
+                bin_edges = [min_v + (max_v - min_v) * i / hist_bins for i in range(hist_bins + 1)]
+                hist_counts = [int(((col_data >= bin_edges[i]) & (col_data < bin_edges[i + 1])).sum()) for i in range(hist_bins)]
+                hist_counts[-1] += int((col_data == max_v).sum())
+
+                max_count = max(hist_counts) if hist_counts else 1
+                bars = []
+                for i, c in enumerate(hist_counts):
+                    pct = c / max_count if max_count else 0
+                    label = f"{bin_edges[i]:.2f}"
+                    bars.append(
+                        f'<div style="display:flex;align-items:center;gap:6px;margin:2px 0;">'
+                        f'<span style="width:60px;font-size:11px;font-family:monospace;text-align:right;color:#64748b;">{label}</span>'
+                        f'<div style="height:16px;width:{pct*100}%;background:#6366f1;border-radius:4px;min-width:4px;"></div>'
+                        f'<span style="font-size:11px;font-family:monospace;color:#334155;">{c}</span>'
+                        f'</div>'
+                    )
+                bars_html = "".join(bars)
+                dist_rows.append(
+                    f'<div class="bg-white p-5 rounded-xl border border-slate-200">'
+                    f'<h4 class="text-sm font-bold text-slate-700 mb-3 font-mono">{col}</h4>'
+                    f'{bars_html}'
+                    f'</div>'
+                )
+            else:
+                counts = df[col].value_counts()
+                total = counts.sum()
+                max_c = counts.max() if len(counts) > 0 else 1
+                bars = []
+                for cat, cnt in counts.items():
+                    pct = cnt / max_c
+                    bars.append(
+                        f'<div style="display:flex;align-items:center;gap:6px;margin:3px 0;">'
+                        f'<span style="width:120px;font-size:11px;font-family:monospace;text-align:right;color:#64748b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{cat}</span>'
+                        f'<div style="height:16px;width:{pct*100}%;background:#6366f1;border-radius:4px;min-width:4px;"></div>'
+                        f'<span style="font-size:11px;font-family:monospace;color:#334155;">{cnt} ({cnt/total:.1%})</span>'
+                        f'</div>'
+                    )
+                bars_html = "".join(bars)
+                dist_rows.append(
+                    f'<div class="bg-white p-6 rounded-xl border border-slate-200">'
+                    f'<h4 class="text-sm font-bold text-slate-700 font-mono">{col}</h4>'
+                    f'{bars_html}'
+                    f'</div>'
+                )
+
+        content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Distribution Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto space-y-8">
+        <header class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200">
+            <div>
+                <h1 class="text-3xl font-extrabold text-slate-900">Feature Distribution Report</h1>
+                <p class="text-slate-500 mt-1">Histogram and value distribution for every feature in the dataset.</p>
+            </div>
+        </header>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {"".join(dist_rows)}
+        </div>
+    </div>
+</body>
+</html>"""
+        with open(dest_path, "w", encoding="utf-8") as f:
+            f.write(content)
+        logger.info("Exported distribution_report.html successfully.")
+
+    def _generate_correlation_report(self, df: pd.DataFrame) -> None:
+        reports_dir = self.config.reports_dir
+        dest_path = reports_dir / "correlation_report.html"
+
+        numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+        corr = df[numeric_cols].corr().fillna(0)
+
+        headers = ["<th class='p-2 text-xs font-bold text-slate-500 font-mono'></th>"]
+        for col in numeric_cols:
+            headers.append(f"<th class='p-2 text-xs font-bold text-slate-600 font-mono truncate max-w-[100px]' title='{col}'>{col}</th>")
+
+        rows = []
+        for i, row_col in enumerate(numeric_cols):
+            row_html = [f"<td class='p-2 text-xs font-semibold text-slate-700 font-mono border-r border-slate-100 bg-slate-50 whitespace-nowrap'>{row_col}</td>"]
+            for col in numeric_cols:
+                val = corr.loc[row_col, col]
+                if val >= 0:
+                    bg = f"background-color: rgba(16, 185, 129, {val:.2f}); color: {'white' if val > 0.5 else 'black'};"
+                else:
+                    bg = f"background-color: rgba(239, 68, 68, {abs(val):.2f}); color: {'white' if abs(val) > 0.5 else 'black'};"
+                row_html.append(f"<td class='p-2 text-xs font-mono text-center border-b border-r border-slate-100' style='{bg}'>{val:.2f}</td>")
+            rows.append(f"<tr>{''.join(row_html)}</tr>")
+
+        pairs = []
+        for i in range(len(numeric_cols)):
+            for j in range(i + 1, len(numeric_cols)):
+                pairs.append((numeric_cols[i], numeric_cols[j], corr.loc[numeric_cols[i], numeric_cols[j]]))
+        pairs.sort(key=lambda x: abs(x[2]), reverse=True)
+        top5 = pairs[:5]
+
+        top5_html = []
+        for a, b, v in top5:
+            arrow = "🟢 strong positive" if v > 0.5 else ("🔴 strong negative" if v < -0.5 else "⚪ weak / moderate")
+            top5_html.append(
+                f'<div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-200">'
+                f'<span class="text-sm font-mono font-semibold text-slate-700">{a} ↔ {b}</span>'
+                f'<span class="text-sm font-mono" style="color:{"#10b981" if v>0 else "#ef4444"}">{v:+.3f}</span>'
+                f'<span class="text-xs text-slate-500">{arrow}</span>'
+                f'</div>'
+            )
+
+        content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correlation Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto space-y-8">
+        <header class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200">
+            <h1 class="text-3xl font-extrabold text-slate-900">Correlation Matrix Report</h1>
+            <p class="text-slate-500 mt-1">Pairwise Pearson correlation between all numeric features.</p>
+        </header>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <h2 class="text-xl font-bold text-slate-800">Top 5 Strongest Correlations</h2>
+            <div class="space-y-2">
+                {"".join(top5_html)}
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <h3 class="text-xl font-bold text-slate-800">Full Correlation Matrix</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead><tr>{"".join(headers)}</tr></thead>
+                    <tbody>{"".join(rows)}</tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>"""
+        with open(dest_path, "w", encoding="utf-8") as f:
+            f.write(content)
+        logger.info("Exported correlation_report.html successfully.")
