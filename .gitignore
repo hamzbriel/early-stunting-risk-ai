@@ -75,14 +75,17 @@ logs/
 secrets/
 
 # Model Artifacts (large binaries — tracked via Git LFS or excluded)
-model/trained_models/*
+# model/trained_models/*
 !model/trained_models/.gitkeep
 
-model/artifacts/*
+# model/artifacts/*
 !model/artifacts/.gitkeep
 
 model/metrics/*
 !model/metrics/.gitkeep
+
+model/figures/*
+!model/figures/.gitkeep
 
 model/explainability/*
 !model/explainability/.gitkeep

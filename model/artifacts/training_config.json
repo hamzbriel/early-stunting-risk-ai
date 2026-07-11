@@ -1,0 +1,7 @@
+{
+    "random_state": 42,
+    "target_column": "risk_level",
+    "cross_validation": 5,
+    "best_model": "CatBoost",
+    "scoring_metric": "f1_weighted"
+}
