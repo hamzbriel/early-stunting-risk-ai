@@ -1,0 +1,55 @@
+{
+    "project": "early-stunting-risk-ai",
+    "explainability_method": "SHAP",
+    "model": "CatBoostClassifier",
+    "explainer": "TreeExplainer",
+    "random_seed": 42,
+    "samples_analyzed": 300,
+    "features_analyzed": 42,
+    "selected_sample_index": 1116,
+    "predicted_label": "Medium",
+    "true_label": "Medium",
+    "prediction_confidence": 0.9895278332631788,
+    "top_features": [
+        {
+            "feature": "num__clean_water",
+            "mean_abs_shap": 0.7653367153200409
+        },
+        {
+            "feature": "num__diarrhea_history",
+            "mean_abs_shap": 0.7022034506693327
+        },
+        {
+            "feature": "cat__protein_intake_low",
+            "mean_abs_shap": 0.49489767882540825
+        },
+        {
+            "feature": "cat__sanitation_good",
+            "mean_abs_shap": 0.46790742542436126
+        },
+        {
+            "feature": "cat__protein_intake_high",
+            "mean_abs_shap": 0.38916541534435517
+        },
+        {
+            "feature": "num__birth_weight",
+            "mean_abs_shap": 0.385411091786794
+        },
+        {
+            "feature": "cat__sanitation_poor",
+            "mean_abs_shap": 0.36337030133705733
+        },
+        {
+            "feature": "cat__immunization_complete",
+            "mean_abs_shap": 0.32743563095403466
+        },
+        {
+            "feature": "cat__family_income_high",
+            "mean_abs_shap": 0.2379610784213366
+        },
+        {
+            "feature": "cat__family_income_very_low",
+            "mean_abs_shap": 0.22816252177012974
+        }
+    ]
+}

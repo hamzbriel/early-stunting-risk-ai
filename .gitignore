@@ -87,7 +87,7 @@ model/metrics/*
 model/figures/*
 !model/figures/.gitkeep
 
-model/explainability/*
+model/explainability/*.png
 !model/explainability/.gitkeep
 
 # Synthetic Data Output (generated files — not tracked)
