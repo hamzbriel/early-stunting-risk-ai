@@ -1,0 +1,94 @@
+{#
+  Card Component - Reusable card container
+
+  Usage:
+  {% from 'components/card.html' import card %}
+  {{ card(title="Card Title", content="Card content here") }}
+
+  Or use as caller block:
+  {% call card(title="Card Title") %}
+    <p>Your custom content here</p>
+  {% endcall %}
+#}
+
+{% macro card(title="", subtitle="", variant="default", class="") %}
+<div class="card {{ class }} {% if variant == 'bordered' %}border-2{% elif variant == 'elevated' %}shadow-lg{% endif %}">
+  {% if title %}
+  <div class="card-header">
+    <h3 class="card-title">{{ title }}</h3>
+    {% if subtitle %}
+    <p class="text-sm text-gray-600 mt-1">{{ subtitle }}</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="card-body">
+    {{ caller() if caller else "" }}
+  </div>
+</div>
+{% endmacro %}
+
+
+{# Simple card without header/footer structure #}
+{% macro simple_card(class="") %}
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 {{ class }}">
+  {{ caller() }}
+</div>
+{% endmacro %}
+
+
+{# Prediction Result Card #}
+{% macro prediction_card(risk_level, confidence, class="") %}
+{% set color_map = {
+  'Low': 'green',
+  'Medium': 'amber',
+  'High': 'red'
+} %}
+{% set color = color_map.get(risk_level, 'gray') %}
+
+<div class="bg-white rounded-xl shadow-lg border-2 border-{{ color }}-200 p-8 {{ class }}">
+  <div class="text-center">
+    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-{{ color }}-100 mb-4">
+      {% if risk_level == 'Low' %}
+        <svg class="w-10 h-10 text-{{ color }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      {% elif risk_level == 'High' %}
+        <svg class="w-10 h-10 text-{{ color }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+      {% else %}
+        <svg class="w-10 h-10 text-{{ color }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      {% endif %}
+    </div>
+
+    <h2 class="text-3xl font-bold text-gray-900 mb-2">Risiko {{ risk_level }}</h2>
+    <p class="text-lg text-gray-600">Tingkat Kepercayaan: <span class="font-semibold text-{{ color }}-600">{{ "%.1f"|format(confidence) }}%</span></p>
+  </div>
+
+  {{ caller() if caller else "" }}
+</div>
+{% endmacro %}
+
+
+{# Stats Card #}
+{% macro stats_card(label, value, icon="", trend="", class="") %}
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 {{ class }}">
+  <div class="flex items-start justify-between">
+    <div class="flex-1">
+      <p class="text-sm font-medium text-gray-600 mb-1">{{ label }}</p>
+      <p class="text-2xl font-bold text-gray-900">{{ value }}</p>
+      {% if trend %}
+      <p class="text-xs text-gray-500 mt-2">{{ trend }}</p>
+      {% endif %}
+    </div>
+    {% if icon %}
+    <div class="ml-4">
+      {{ icon|safe }}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endmacro %}

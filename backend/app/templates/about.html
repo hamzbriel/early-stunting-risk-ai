@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Tentang Proyek - Early Stunting Risk AI{% endblock %}
+
+{% block content %}
+
+<div class="bg-gray-50 py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Tentang Proyek</h1>
+
+            <!-- Project Overview -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-6">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Early Stunting Risk AI</h2>
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    Sistem prediksi risiko stunting end-to-end yang menggunakan Machine Learning untuk membantu
+                    tenaga kesehatan dalam melakukan deteksi dini dan intervensi pada anak-anak yang berisiko stunting.
+                </p>
+                <p class="text-gray-700 leading-relaxed">
+                    Proyek ini dibangun sebagai demonstrasi lengkap dari pengembangan AI, mulai dari pembuatan
+                    dataset sintetis, pelatihan model, hingga deployment aplikasi web yang production-ready.
+                </p>
+            </div>
+
+            <!-- Tech Stack -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Teknologi</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-medium text-gray-900 mb-2">Machine Learning</h3>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• Scikit-learn, XGBoost, CatBoost</li>
+                            <li>• SHAP (Explainable AI)</li>
+                            <li>• Pandas, NumPy</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-900 mb-2">Backend</h3>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• FastAPI</li>
+                            <li>• Pydantic v2</li>
+                            <li>• Uvicorn</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-900 mb-2">Frontend</h3>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• HTML5, CSS3, JavaScript</li>
+                            <li>• Tailwind CSS</li>
+                            <li>• Jinja2 Templates</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-900 mb-2">Deployment</h3>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• Render</li>
+                            <li>• Git & GitHub</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 mb-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Fitur Utama</h2>
+                <ul class="space-y-3">
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-emerald-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">Prediksi risiko stunting dengan 20+ faktor kesehatan</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-emerald-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">Explainable AI dengan SHAP untuk transparansi hasil</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-emerald-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">Rekomendasi kesehatan yang dipersonalisasi</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-emerald-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">Interface modern dan responsive</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-6 h-6 text-emerald-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-700">REST API yang terdokumentasi lengkap</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- CTA -->
+            <div class="text-center">
+                <a href="/prediction" class="btn btn-primary inline-flex items-center">
+                    Coba Prediksi Sekarang
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

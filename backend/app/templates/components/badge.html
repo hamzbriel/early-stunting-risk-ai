@@ -1,0 +1,72 @@
+{#
+  Badge Component - Status indicators and labels
+
+  Usage:
+  {% from 'components/badge.html' import badge, risk_badge %}
+  {{ badge("Active", variant="success") }}
+  {{ risk_badge("Low") }}
+#}
+
+{% macro badge(text, variant="default", size="md", class="") %}
+{% set variant_classes = {
+  'default': 'bg-gray-100 text-gray-800',
+  'success': 'bg-green-100 text-green-800',
+  'warning': 'bg-amber-100 text-amber-800',
+  'danger': 'bg-red-100 text-red-800',
+  'info': 'bg-sky-100 text-sky-800',
+  'primary': 'bg-emerald-100 text-emerald-800',
+  'secondary': 'bg-teal-100 text-teal-800'
+} %}
+
+{% set size_classes = {
+  'sm': 'px-2 py-0.5 text-xs',
+  'md': 'px-3 py-1 text-sm',
+  'lg': 'px-4 py-1.5 text-base'
+} %}
+
+<span class="inline-flex items-center rounded-full font-medium {{ variant_classes[variant] }} {{ size_classes[size] }} {{ class }}">
+  {{ text }}
+</span>
+{% endmacro %}
+
+
+{# Risk Badge - Specialized badge for risk levels #}
+{% macro risk_badge(risk_level, size="md") %}
+{% if risk_level == 'Low' %}
+  {{ badge('Risiko Rendah', variant='success', size=size) }}
+{% elif risk_level == 'Medium' %}
+  {{ badge('Risiko Sedang', variant='warning', size=size) }}
+{% elif risk_level == 'High' %}
+  {{ badge('Risiko Tinggi', variant='danger', size=size) }}
+{% else %}
+  {{ badge(risk_level, variant='default', size=size) }}
+{% endif %}
+{% endmacro %}
+
+
+{# Status Badge with icon #}
+{% macro status_badge(text, icon_svg="", variant="default", class="") %}
+<span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium {{ class }}
+  {% if variant == 'success' %}bg-green-100 text-green-800
+  {% elif variant == 'warning' %}bg-amber-100 text-amber-800
+  {% elif variant == 'danger' %}bg-red-100 text-red-800
+  {% elif variant == 'info' %}bg-sky-100 text-sky-800
+  {% else %}bg-gray-100 text-gray-800{% endif %}">
+  {% if icon_svg %}
+  <span class="w-4 h-4">{{ icon_svg|safe }}</span>
+  {% endif %}
+  <span>{{ text }}</span>
+</span>
+{% endmacro %}
+
+
+{# Percentage Badge #}
+{% macro percentage_badge(value, threshold_high=70, threshold_low=30) %}
+{% if value >= threshold_high %}
+  {{ badge("%.1f%%"|format(value), variant='success') }}
+{% elif value <= threshold_low %}
+  {{ badge("%.1f%%"|format(value), variant='danger') }}
+{% else %}
+  {{ badge("%.1f%%"|format(value), variant='warning') }}
+{% endif %}
+{% endmacro %}

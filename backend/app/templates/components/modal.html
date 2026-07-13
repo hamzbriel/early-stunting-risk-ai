@@ -1,0 +1,77 @@
+{#
+  Modal Component - Dialog overlay
+
+  Usage:
+  {% from 'components/modal.html' import modal %}
+  {% call modal(id="myModal", title="Modal Title") %}
+    <p>Modal content here</p>
+  {% endcall %}
+
+  Trigger: <button onclick="openModal('myModal')">Open</button>
+#}
+
+{% macro modal(id, title="", size="md", closeable=true) %}
+{% set size_classes = {
+  'sm': 'max-w-md',
+  'md': 'max-w-2xl',
+  'lg': 'max-w-4xl',
+  'xl': 'max-w-6xl'
+} %}
+
+<div id="{{ id }}" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="{{ id }}-title" role="dialog" aria-modal="true">
+  <!-- Overlay -->
+  <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" onclick="closeModal('{{ id }}')"></div>
+
+  <!-- Modal Container -->
+  <div class="flex min-h-screen items-center justify-center p-4">
+    <!-- Modal Content -->
+    <div class="relative bg-white rounded-xl shadow-2xl {{ size_classes[size] }} w-full transform transition-all animate-fade-in">
+
+      <!-- Header -->
+      {% if title or closeable %}
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+        <h3 id="{{ id }}-title" class="text-xl font-semibold text-gray-900">{{ title }}</h3>
+        {% if closeable %}
+        <button onclick="closeModal('{{ id }}')" class="p-1 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <!-- Body -->
+      <div class="px-6 py-4">
+        {{ caller() }}
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+
+{# Confirmation Modal #}
+{% macro confirm_modal(id, title, message, confirm_text="Konfirmasi", cancel_text="Batal", confirm_variant="primary") %}
+<div id="{{ id }}" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-modal="true">
+  <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" onclick="closeModal('{{ id }}')"></div>
+
+  <div class="flex min-h-screen items-center justify-center p-4">
+    <div class="relative bg-white rounded-xl shadow-2xl max-w-md w-full">
+      <div class="p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ title }}</h3>
+        <p class="text-gray-600 mb-6">{{ message }}</p>
+
+        <div class="flex space-x-3">
+          <button onclick="closeModal('{{ id }}')" class="flex-1 btn btn-outline">
+            {{ cancel_text }}
+          </button>
+          <button id="{{ id }}-confirm" class="flex-1 btn btn-{{ confirm_variant }}">
+            {{ confirm_text }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}

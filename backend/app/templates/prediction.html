@@ -1,0 +1,379 @@
+{% extends "base.html" %}
+
+{% block title %}Prediksi Risiko Stunting - Early Stunting Risk AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Custom styles for form sections */
+    .form-section {
+        @apply mb-8 pb-8 border-b border-gray-200 last:border-0;
+    }
+
+    .form-section-title {
+        @apply text-xl font-semibold text-gray-900 mb-4 flex items-center;
+    }
+
+    .form-section-icon {
+        @apply w-6 h-6 mr-2 text-emerald-600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="bg-gray-50 py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-5xl mx-auto">
+
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Prediksi Risiko Stunting
+                </h1>
+                <p class="text-lg text-gray-600">
+                    Lengkapi form berikut untuk mendapatkan prediksi risiko stunting menggunakan AI
+                </p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                <form id="prediction-form" method="POST" action="/predict">
+
+                    <!-- Informasi Anak -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">
+                            <svg class="form-section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            Informasi Anak
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Age Month -->
+                            <div class="form-group">
+                                <label for="age_month" class="form-label required">Usia Anak (bulan)</label>
+                                <input type="number" id="age_month" name="age_month" min="0" max="60" required
+                                    class="form-input" placeholder="Contoh: 18">
+                                <p class="form-help">Usia anak dalam bulan (0-60)</p>
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="form-group">
+                                <label class="form-label required">Jenis Kelamin</label>
+                                <div class="flex space-x-4 mt-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="gender" value="M" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Laki-laki</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="gender" value="F" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Perempuan</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Birth Weight -->
+                            <div class="form-group">
+                                <label for="birth_weight" class="form-label required">Berat Lahir (kg)</label>
+                                <input type="number" id="birth_weight" name="birth_weight" min="0.5" max="7" step="0.1" required
+                                    class="form-input" placeholder="Contoh: 3.2">
+                                <p class="form-help">Berat badan saat lahir (0.5-7 kg)</p>
+                            </div>
+
+                            <!-- Birth Length -->
+                            <div class="form-group">
+                                <label for="birth_length" class="form-label required">Panjang Lahir (cm)</label>
+                                <input type="number" id="birth_length" name="birth_length" min="25" max="65" step="0.1" required
+                                    class="form-input" placeholder="Contoh: 49.5">
+                                <p class="form-help">Panjang badan saat lahir (25-65 cm)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informasi Ibu -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">
+                            <svg class="form-section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                            Informasi Ibu
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Mother Age -->
+                            <div class="form-group">
+                                <label for="mother_age" class="form-label required">Usia Ibu (tahun)</label>
+                                <input type="number" id="mother_age" name="mother_age" min="15" max="60" required
+                                    class="form-input" placeholder="Contoh: 28">
+                                <p class="form-help">Usia ibu saat ini (15-60 tahun)</p>
+                            </div>
+
+                            <!-- Mother Education -->
+                            <div class="form-group">
+                                <label for="mother_education" class="form-label required">Pendidikan Ibu</label>
+                                <select id="mother_education" name="mother_education" required class="form-select">
+                                    <option value="">Pilih pendidikan...</option>
+                                    <option value="none">Tidak sekolah</option>
+                                    <option value="primary">SD/Sederajat</option>
+                                    <option value="secondary">SMP-SMA/Sederajat</option>
+                                    <option value="higher">Perguruan Tinggi</option>
+                                </select>
+                            </div>
+
+                            <!-- Mother Working -->
+                            <div class="form-group">
+                                <label class="form-label required">Status Pekerjaan Ibu</label>
+                                <div class="flex space-x-4 mt-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="mother_working" value="1" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Bekerja</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="mother_working" value="0" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Tidak Bekerja</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informasi Ayah -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">
+                            <svg class="form-section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            Informasi Ayah
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Father Education -->
+                            <div class="form-group">
+                                <label for="father_education" class="form-label required">Pendidikan Ayah</label>
+                                <select id="father_education" name="father_education" required class="form-select">
+                                    <option value="">Pilih pendidikan...</option>
+                                    <option value="none">Tidak sekolah</option>
+                                    <option value="primary">SD/Sederajat</option>
+                                    <option value="secondary">SMP-SMA/Sederajat</option>
+                                    <option value="higher">Perguruan Tinggi</option>
+                                </select>
+                            </div>
+
+                            <!-- Father Working -->
+                            <div class="form-group">
+                                <label class="form-label required">Status Pekerjaan Ayah</label>
+                                <div class="flex space-x-4 mt-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="father_working" value="1" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Bekerja</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="father_working" value="0" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Tidak Bekerja</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informasi Rumah Tangga -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">
+                            <svg class="form-section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            Informasi Rumah Tangga
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Family Income -->
+                            <div class="form-group">
+                                <label for="family_income" class="form-label required">Pendapatan Keluarga</label>
+                                <select id="family_income" name="family_income" required class="form-select">
+                                    <option value="">Pilih tingkat pendapatan...</option>
+                                    <option value="very_low">Sangat Rendah</option>
+                                    <option value="low">Rendah</option>
+                                    <option value="medium">Menengah</option>
+                                    <option value="high">Tinggi</option>
+                                </select>
+                            </div>
+
+                            <!-- Sanitation -->
+                            <div class="form-group">
+                                <label for="sanitation" class="form-label required">Kualitas Sanitasi</label>
+                                <select id="sanitation" name="sanitation" required class="form-select">
+                                    <option value="">Pilih kualitas sanitasi...</option>
+                                    <option value="poor">Buruk</option>
+                                    <option value="fair">Cukup</option>
+                                    <option value="good">Baik</option>
+                                </select>
+                            </div>
+
+                            <!-- Clean Water -->
+                            <div class="form-group">
+                                <label class="form-label required">Akses Air Bersih</label>
+                                <div class="flex space-x-4 mt-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="clean_water" value="1" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Ada</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="clean_water" value="0" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Tidak Ada</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Electricity -->
+                            <div class="form-group">
+                                <label class="form-label required">Akses Listrik</label>
+                                <div class="flex space-x-4 mt-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="electricity" value="1" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Ada</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="electricity" value="0" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Tidak Ada</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- House Density -->
+                            <div class="form-group md:col-span-2">
+                                <label for="house_density" class="form-label required">Kepadatan Rumah</label>
+                                <select id="house_density" name="house_density" required class="form-select">
+                                    <option value="">Pilih tingkat kepadatan...</option>
+                                    <option value="low">Rendah (tidak padat)</option>
+                                    <option value="medium">Sedang</option>
+                                    <option value="high">Tinggi (sangat padat)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nutrisi -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">
+                            <svg class="form-section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                            </svg>
+                            Nutrisi
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Exclusive Breastfeeding -->
+                            <div class="form-group">
+                                <label class="form-label required">ASI Eksklusif 6 Bulan</label>
+                                <div class="flex space-x-4 mt-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="exclusive_breastfeeding" value="1" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Ya</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="exclusive_breastfeeding" value="0" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Tidak</span>
+                                    </label>
+                                </div>
+                                <p class="form-help">ASI eksklusif selama 6 bulan pertama</p>
+                            </div>
+
+                            <!-- Protein Intake -->
+                            <div class="form-group">
+                                <label for="protein_intake" class="form-label required">Asupan Protein</label>
+                                <select id="protein_intake" name="protein_intake" required class="form-select">
+                                    <option value="">Pilih tingkat asupan...</option>
+                                    <option value="low">Rendah</option>
+                                    <option value="medium">Sedang</option>
+                                    <option value="high">Tinggi</option>
+                                </select>
+                            </div>
+
+                            <!-- Vitamin Intake -->
+                            <div class="form-group">
+                                <label for="vitamin_intake" class="form-label required">Asupan Vitamin</label>
+                                <select id="vitamin_intake" name="vitamin_intake" required class="form-select">
+                                    <option value="">Pilih tingkat asupan...</option>
+                                    <option value="low">Rendah</option>
+                                    <option value="medium">Sedang</option>
+                                    <option value="high">Tinggi</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kesehatan -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">
+                            <svg class="form-section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.040A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                            Kesehatan
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Immunization -->
+                            <div class="form-group">
+                                <label for="immunization" class="form-label required">Status Imunisasi</label>
+                                <select id="immunization" name="immunization" required class="form-select">
+                                    <option value="">Pilih status imunisasi...</option>
+                                    <option value="none">Tidak ada</option>
+                                    <option value="partial">Sebagian</option>
+                                    <option value="complete">Lengkap</option>
+                                </select>
+                            </div>
+
+                            <!-- Diarrhea History -->
+                            <div class="form-group">
+                                <label class="form-label required">Riwayat Diare</label>
+                                <div class="flex space-x-4 mt-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="diarrhea_history" value="1" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Ya</span>
+                                    </label>
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" name="diarrhea_history" value="0" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="ml-2">Tidak</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Healthcare Access -->
+                            <div class="form-group">
+                                <label for="healthcare_access" class="form-label required">Akses Layanan Kesehatan</label>
+                                <select id="healthcare_access" name="healthcare_access" required class="form-select">
+                                    <option value="">Pilih tingkat akses...</option>
+                                    <option value="poor">Buruk</option>
+                                    <option value="fair">Cukup</option>
+                                    <option value="good">Baik</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                        <button type="submit" id="submit-btn" class="flex-1 btn btn-primary text-lg py-3">
+                            <span id="submit-text">Prediksi Risiko Stunting</span>
+                            <span id="submit-loading" class="hidden">
+                                <span class="spinner mr-2"></span>
+                                Memproses...
+                            </span>
+                        </button>
+                        <button type="reset" class="flex-1 sm:flex-none btn btn-outline">
+                            Reset Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='/js/prediction.js') }}"></script>
+<script src="{{ url_for('static', path='/js/validation.js') }}"></script>
+{% endblock %}

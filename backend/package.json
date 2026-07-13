@@ -1,0 +1,15 @@
+{
+  "name": "early-stunting-risk-frontend",
+  "version": "1.0.0",
+  "description": "Frontend assets for Early Stunting Risk AI",
+  "scripts": {
+    "build:css": "tailwindcss -i ./app/static/css/styles.css -o ./app/static/css/output.css --minify",
+    "watch:css": "tailwindcss -i ./app/static/css/styles.css -o ./app/static/css/output.css --watch"
+  },
+  "keywords": ["tailwind", "healthcare", "frontend"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}

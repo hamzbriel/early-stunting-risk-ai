@@ -1,0 +1,298 @@
+/* =============================================================================
+   Early Stunting Risk AI - Main Stylesheet
+   Built with Tailwind CSS + Custom Healthcare Theme
+   ============================================================================= */
+
+/* Import Inter font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Tailwind Base */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================================
+   CSS Custom Properties - Healthcare Color Palette
+   ============================================================================= */
+
+:root {
+  /* Primary - Emerald (Health & Growth) */
+  --color-primary-50: #ecfdf5;
+  --color-primary-100: #d1fae5;
+  --color-primary-200: #a7f3d0;
+  --color-primary-300: #6ee7b7;
+  --color-primary-400: #34d399;
+  --color-primary-500: #10b981;
+  --color-primary-600: #059669;
+  --color-primary-700: #047857;
+  --color-primary-800: #065f46;
+  --color-primary-900: #064e3b;
+
+  /* Secondary - Teal (Medical & Trust) */
+  --color-secondary-50: #f0fdfa;
+  --color-secondary-100: #ccfbf1;
+  --color-secondary-200: #99f6e4;
+  --color-secondary-300: #5eead4;
+  --color-secondary-400: #2dd4bf;
+  --color-secondary-500: #14b8a6;
+  --color-secondary-600: #0d9488;
+  --color-secondary-700: #0f766e;
+  --color-secondary-800: #115e59;
+  --color-secondary-900: #134e4a;
+
+  /* Accent - Sky (Clarity & Calm) */
+  --color-accent-50: #f0f9ff;
+  --color-accent-100: #e0f2fe;
+  --color-accent-200: #bae6fd;
+  --color-accent-300: #7dd3fc;
+  --color-accent-400: #38bdf8;
+  --color-accent-500: #0ea5e9;
+  --color-accent-600: #0284c7;
+  --color-accent-700: #0369a1;
+  --color-accent-800: #075985;
+  --color-accent-900: #0c4a6e;
+
+  /* Semantic Colors */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+
+  /* Neutral Gray Scale */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+}
+
+/* =============================================================================
+   Base Styles
+   ============================================================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-gray-800);
+  background-color: var(--color-gray-50);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============================================================================
+   Typography
+   ============================================================================= */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-gray-900);
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+@media (max-width: 768px) {
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
+  h4 { font-size: 1.25rem; }
+}
+
+/* =============================================================================
+   Custom Component Classes
+   ============================================================================= */
+
+/* Buttons */
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500;
+}
+
+.btn-secondary {
+  @apply bg-teal-600 text-white hover:bg-teal-700 focus:ring-teal-500;
+}
+
+.btn-outline {
+  @apply border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 focus:ring-emerald-500;
+}
+
+.btn-disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* Cards */
+.card {
+  @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6 transition-shadow hover:shadow-md;
+}
+
+.card-header {
+  @apply mb-4 pb-4 border-b border-gray-200;
+}
+
+.card-title {
+  @apply text-xl font-semibold text-gray-900;
+}
+
+/* Form Elements */
+.form-group {
+  @apply mb-4;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+
+.form-input {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all;
+}
+
+.form-select {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all bg-white;
+}
+
+.form-error {
+  @apply text-sm text-red-600 mt-1;
+}
+
+.form-help {
+  @apply text-sm text-gray-500 mt-1;
+}
+
+/* Badges */
+.badge {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+}
+
+.badge-success {
+  @apply bg-green-100 text-green-800;
+}
+
+.badge-warning {
+  @apply bg-amber-100 text-amber-800;
+}
+
+.badge-danger {
+  @apply bg-red-100 text-red-800;
+}
+
+.badge-info {
+  @apply bg-sky-100 text-sky-800;
+}
+
+/* Loading Spinner */
+.spinner {
+  @apply inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin;
+}
+
+/* Toast/Alert */
+.toast {
+  @apply fixed top-4 right-4 bg-white rounded-lg shadow-lg border p-4 max-w-md z-50 animate-slide-in;
+}
+
+.toast-success {
+  @apply border-l-4 border-green-500;
+}
+
+.toast-error {
+  @apply border-l-4 border-red-500;
+}
+
+.toast-warning {
+  @apply border-l-4 border-amber-500;
+}
+
+/* =============================================================================
+   Utility Classes
+   ============================================================================= */
+
+/* Container */
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Section Spacing */
+.section {
+  @apply py-12 md:py-16 lg:py-20;
+}
+
+/* Animations */
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Focus Visible (Accessibility) */
+.focus-visible {
+  @apply focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2;
+}
+
+/* =============================================================================
+   Responsive Utilities
+   ============================================================================= */
+
+/* Hide on mobile */
+.hide-mobile {
+  @apply hidden md:block;
+}
+
+/* Show only on mobile */
+.show-mobile {
+  @apply block md:hidden;
+}
+
+/* =============================================================================
+   Print Styles
+   ============================================================================= */
+
+@media print {
+  body {
+    @apply bg-white;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

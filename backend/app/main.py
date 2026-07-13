@@ -12,6 +12,8 @@ from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from app.config import settings
 from app.core.model_loader import ModelLoader
@@ -86,6 +88,12 @@ app = FastAPI(
     },
 )
 
+# Mount static files
+app.mount("/static", StaticFiles(directory=str(settings.STATIC_DIR)), name="static")
+
+# Setup Jinja2 templates
+templates = Jinja2Templates(directory=str(settings.TEMPLATES_DIR))
+
 
 # CORS Middleware
 app.add_middleware(
@@ -133,10 +141,50 @@ async def global_exception_handler(
 
 # Root Endpoints
 
-@app.get("/", tags=["Root"])
-async def root() -> dict[str, Any]:
+@app.get("/", tags=["Pages"], include_in_schema=False)
+async def home(request: Request):
     """
-    Root endpoint returning application information.
+    Homepage - Landing page with project overview and features.
+    """
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
+@app.get("/prediction", tags=["Pages"], include_in_schema=False)
+async def prediction_page(request: Request):
+    """
+    Prediction form page - Input form for stunting risk prediction.
+    """
+    return templates.TemplateResponse("prediction.html", {"request": request})
+
+
+@app.get("/model-info-page", tags=["Pages"], include_in_schema=False)
+async def model_info_page(request: Request):
+    """
+    Model information page - Displays model metadata and metrics.
+    """
+    return templates.TemplateResponse("model.html", {"request": request})
+
+
+@app.get("/about", tags=["Pages"], include_in_schema=False)
+async def about_page(request: Request):
+    """
+    About page - Project information and tech stack.
+    """
+    return templates.TemplateResponse("about.html", {"request": request})
+
+
+@app.get("/result", tags=["Pages"], include_in_schema=False)
+async def result_page(request: Request):
+    """
+    Result page - Displays prediction results (populated via JavaScript from sessionStorage).
+    """
+    return templates.TemplateResponse("result.html", {"request": {}})
+
+
+@app.get("/api", tags=["Root"])
+async def api_info() -> dict[str, Any]:
+    """
+    API information endpoint.
 
     Returns basic metadata about the API.
     """

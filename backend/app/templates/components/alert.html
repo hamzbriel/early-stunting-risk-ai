@@ -1,0 +1,92 @@
+{#
+  Alert/Toast Component - Notifications and messages
+
+  Usage:
+  {% from 'components/alert.html' import alert, toast_container %}
+  {{ alert("Success message", variant="success") }}
+
+  For toast (requires JS): {{ toast_container() }}
+#}
+
+{% macro alert(message, variant="info", dismissible=false, class="") %}
+{% set variant_classes = {
+  'success': 'bg-green-50 border-green-200 text-green-800',
+  'warning': 'bg-amber-50 border-amber-200 text-amber-800',
+  'danger': 'bg-red-50 border-red-200 text-red-800',
+  'info': 'bg-sky-50 border-sky-200 text-sky-800'
+} %}
+
+{% set icon_map = {
+  'success': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>',
+  'warning': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>',
+  'danger': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>',
+  'info': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>'
+} %}
+
+<div class="flex items-start p-4 border rounded-lg {{ variant_classes[variant] }} {{ class }}" role="alert">
+  <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    {{ icon_map[variant]|safe }}
+  </svg>
+  <div class="flex-1">
+    {{ message|safe }}
+  </div>
+  {% if dismissible %}
+  <button onclick="this.parentElement.remove()" class="ml-3 flex-shrink-0 focus:outline-none">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+  {% endif %}
+</div>
+{% endmacro %}
+
+
+{# Toast Container - For dynamic toast notifications via JS #}
+{% macro toast_container() %}
+<div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2 max-w-md">
+  <!-- Toasts will be dynamically inserted here via JavaScript -->
+</div>
+{% endmacro %}
+
+
+{# Loading Spinner #}
+{% macro spinner(size="md", color="emerald") %}
+{% set size_classes = {
+  'sm': 'w-4 h-4 border-2',
+  'md': 'w-6 h-6 border-2',
+  'lg': 'w-8 h-8 border-3',
+  'xl': 'w-12 h-12 border-4'
+} %}
+
+<div class="inline-block {{ size_classes[size] }} border-{{ color }}-600 border-t-transparent rounded-full animate-spin"></div>
+{% endmacro %}
+
+
+{# Loading State #}
+{% macro loading_state(message="Loading...", class="") %}
+<div class="flex flex-col items-center justify-center py-12 {{ class }}">
+  {{ spinner(size="lg") }}
+  <p class="mt-4 text-gray-600">{{ message }}</p>
+</div>
+{% endmacro %}
+
+
+{# Empty State #}
+{% macro empty_state(title, message="", icon_svg="", action_text="", action_url="", class="") %}
+<div class="text-center py-12 {{ class }}">
+  {% if icon_svg %}
+  <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+    {{ icon_svg|safe }}
+  </div>
+  {% endif %}
+
+  <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ title }}</h3>
+  {% if message %}
+  <p class="text-gray-600 mb-4">{{ message }}</p>
+  {% endif %}
+
+  {% if action_text and action_url %}
+  <a href="{{ action_url }}" class="btn btn-primary">{{ action_text }}</a>
+  {% endif %}
+</div>
+{% endmacro %}
