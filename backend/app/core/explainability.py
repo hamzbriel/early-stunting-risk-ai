@@ -49,7 +49,7 @@ class ExplainabilityService:
         result = [
             FeatureImportance(
                 feature=str(row["feature"]),
-                importance=float(row["importance"]),
+                importance=float(row.get("importance", row.get("mean_abs_shap"))),
             )
             for _, row in self.feature_importance_df.iterrows()
         ]

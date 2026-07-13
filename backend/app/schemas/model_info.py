@@ -96,6 +96,7 @@ class ModelInfoResponse(BaseModel):
     )
 
     model_config = {
+        "protected_namespaces": (),
         "json_schema_extra": {
             "example": {
                 "model_type": "Pipeline",

@@ -157,7 +157,7 @@ async def prediction_page(request: Request):
     return templates.TemplateResponse("prediction.html", {"request": request})
 
 
-@app.get("/model-info-page", tags=["Pages"], include_in_schema=False)
+@app.get("/model-info", tags=["Pages"], include_in_schema=False)
 async def model_info_page(request: Request):
     """
     Model information page - Displays model metadata and metrics.

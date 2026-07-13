@@ -125,12 +125,15 @@ class Predictor:
             importance_data = self.feature_importance_df.copy()
 
             # Sort by importance and take top N
-            top_n = importance_data.nlargest(n, "importance")
+            importance_column = (
+                "importance" if "importance" in importance_data.columns else "mean_abs_shap"
+            )
+            top_n = importance_data.nlargest(n, importance_column)
 
             return [
                 RiskFactor(
                     feature=row["feature"],
-                    importance=float(row["importance"]),
+                    importance=float(row[importance_column]),
                 )
                 for _, row in top_n.iterrows()
             ]

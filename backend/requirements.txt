@@ -13,9 +13,11 @@ scikit-learn==1.6.1
 pandas==2.2.3
 numpy==2.1.2
 joblib==1.4.2
+catboost>=1.2.0
 
 # Explainability
-shap==0.46.0
+# SHAP is only needed in the training/explainability pipeline, not at backend runtime.
+# The backend serves pre-computed explainability artifacts from CSV/JSON files.
 
 # Utilities
 python-multipart==0.0.12

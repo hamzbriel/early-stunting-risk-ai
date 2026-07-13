@@ -138,7 +138,7 @@ async function loadModelInfo() {
     content.classList.add('hidden');
 
     try {
-        const response = await fetch('/model-info');
+        const response = await fetch('/model-data');
         if (!response.ok) throw new Error('Failed to fetch');
 
         const data = await response.json();

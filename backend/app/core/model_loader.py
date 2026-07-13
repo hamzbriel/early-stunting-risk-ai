@@ -50,7 +50,7 @@ class ModelLoader:
 
         # Optional artifacts (won't crash if missing)
         self.training_config = self._load_training_config()
-        self.evaluation_results = self._load_evaluation_results()
+        self.evaluation_results = None
         self.explanation_summary = self._load_explanation_summary()
         self.feature_importance = self._load_feature_importance()
 
@@ -165,24 +165,6 @@ class ModelLoader:
             return config
         except Exception as e:
             logger.warning(f"Failed to load training config: {e}")
-            return None
-
-    def _load_evaluation_results(self) -> Optional[dict[str, Any]]:
-        """Load evaluation results (optional)."""
-        path = settings.EVALUATION_RESULTS_PATH
-        logger.info(f"Loading evaluation results from: {path.name}")
-
-        if not path.exists():
-            logger.warning("Evaluation results not found (optional)")
-            return None
-
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                results = json.load(f)
-            logger.info("Evaluation results loaded successfully")
-            return results
-        except Exception as e:
-            logger.warning(f"Failed to load evaluation results: {e}")
             return None
 
     def _load_explanation_summary(self) -> Optional[dict[str, Any]]:

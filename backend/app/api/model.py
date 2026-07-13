@@ -15,7 +15,7 @@ from app.schemas.model_info import ModelInfoResponse
 router = APIRouter()
 
 
-@router.get("/model-info", response_model=ModelInfoResponse)
+@router.get("/model-data", response_model=ModelInfoResponse)
 async def get_model_info() -> ModelInfoResponse:
     """
     Get comprehensive model information.

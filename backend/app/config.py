@@ -98,11 +98,6 @@ class Settings(BaseSettings):
         return self.ARTIFACT_DIR / "training_config.json"
 
     @property
-    def EVALUATION_RESULTS_PATH(self) -> Path:
-        """Path to evaluation results JSON."""
-        return self.ARTIFACT_DIR / "evaluation_results.json"
-
-    @property
     def FEATURE_IMPORTANCE_PATH(self) -> Path:
         """Path to feature importance CSV."""
         return self.EXPLAINABILITY_DIR / "feature_importance.csv"
@@ -135,7 +130,6 @@ class Settings(BaseSettings):
             "LABEL_ENCODER_PATH": self.LABEL_ENCODER_PATH,
             "FEATURE_NAMES_PATH": self.FEATURE_NAMES_PATH,
             "TRAINING_CONFIG_PATH": self.TRAINING_CONFIG_PATH,
-            "EVALUATION_RESULTS_PATH": self.EVALUATION_RESULTS_PATH,
             "FEATURE_IMPORTANCE_PATH": self.FEATURE_IMPORTANCE_PATH,
             "EXPLANATION_SUMMARY_PATH": self.EXPLANATION_SUMMARY_PATH,
         }
@@ -179,7 +173,6 @@ def print_config() -> None:
     print(f"  LABEL_ENCODER:       {settings.LABEL_ENCODER_PATH}")
     print(f"  FEATURE_NAMES:       {settings.FEATURE_NAMES_PATH}")
     print(f"  TRAINING_CONFIG:     {settings.TRAINING_CONFIG_PATH}")
-    print(f"  EVALUATION_RESULTS:  {settings.EVALUATION_RESULTS_PATH}")
     print(f"  FEATURE_IMPORTANCE:  {settings.FEATURE_IMPORTANCE_PATH}")
     print(f"  EXPLANATION_SUMMARY: {settings.EXPLANATION_SUMMARY_PATH}")
 
