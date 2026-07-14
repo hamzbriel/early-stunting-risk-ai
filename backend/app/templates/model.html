@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Informasi Model - Early Stunting Risk AI{% endblock %}
+{% block title %}Informasi Model - StuntRisk AI{% endblock %}
 
 {% block content %}
 
@@ -182,7 +182,7 @@ async function loadModelInfo() {
                     const metricCard = document.createElement('div');
                     metricCard.className = 'text-center p-4 bg-gray-50 rounded-lg';
                     metricCard.innerHTML = `
-                        <p class="text-2xl font-bold text-emerald-600">${(value * 100).toFixed(1)}%</p>
+                        <p class="text-2xl font-bold text-emerald-600">${(value * 100).toFixed(2)}%</p>
                         <p class="text-sm text-gray-600 mt-1">${metricLabels[key] || key}</p>
                     `;
                     metricsContainer.appendChild(metricCard);

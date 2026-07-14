@@ -1,12 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}Prediksi Risiko Stunting - Early Stunting Risk AI{% endblock %}
+{% block title %}Prediksi Risiko Stunting - StuntRisk AI{% endblock %}
 
 {% block extra_css %}
 <style>
     /* Custom styles for form sections */
     .form-section {
-        @apply mb-8 pb-8 border-b border-gray-200 last:border-0;
+        margin-bottom: 3rem;
+        padding-bottom: 3rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .form-section:last-child {
+        border-bottom: none;
     }
 
     .form-section-title {
@@ -14,7 +20,11 @@
     }
 
     .form-section-icon {
-        @apply w-6 h-6 mr-2 text-emerald-600;
+        width: 2rem;
+        height: 2rem;
+        margin-left: auto;
+        margin-right: auto;
+        color: #059669;
     }
 </style>
 {% endblock %}

@@ -1,4 +1,7 @@
 {
+    "model_type": "Gradient Boosting",
+    "model_name": "CatBoost",
+    "training_date": "11 Juli 2026",
     "random_state": 42,
     "target_column": "risk_level",
     "cross_validation": 5,

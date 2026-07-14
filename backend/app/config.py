@@ -107,6 +107,16 @@ class Settings(BaseSettings):
         """Path to explanation summary JSON."""
         return self.EXPLAINABILITY_DIR / "explanation_summary.json"
 
+    @property
+    def METRICS_PATH(self) -> Path:
+        """Path to evaluation metrics JSON."""
+        return self.MODEL_DIR / "metrics" / "metrics.json"
+
+    @property
+    def MODEL_INFO_PATH(self) -> Path:
+        """Path to model info JSON."""
+        return self.MODEL_DIR / "metrics" / "model_info.json"
+
     # Static files and templates
     @property
     def STATIC_DIR(self) -> Path:

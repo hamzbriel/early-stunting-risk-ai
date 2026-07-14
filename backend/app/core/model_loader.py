@@ -50,7 +50,8 @@ class ModelLoader:
 
         # Optional artifacts (won't crash if missing)
         self.training_config = self._load_training_config()
-        self.evaluation_results = None
+        self.model_info_data = self._load_model_info_data()
+        self.evaluation_results = self._load_evaluation_results()
         self.explanation_summary = self._load_explanation_summary()
         self.feature_importance = self._load_feature_importance()
 
@@ -202,6 +203,51 @@ class ModelLoader:
             logger.warning(f"Failed to load feature importance: {e}")
             return None
 
+    def _load_model_info_data(self) -> Optional[dict[str, Any]]:
+        """Load model info from JSON (optional)."""
+        path = settings.MODEL_INFO_PATH
+        logger.info(f"Loading model info from: {path.name}")
+
+        if not path.exists():
+            logger.warning("Model info not found (optional)")
+            return None
+
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                info = json.load(f)
+            logger.info("Model info loaded successfully")
+            return info
+        except Exception as e:
+            logger.warning(f"Failed to load model info: {e}")
+            return None
+
+    def _load_evaluation_results(self) -> Optional[dict[str, Any]]:
+        """Load evaluation metrics from JSON (optional)."""
+        path = settings.METRICS_PATH
+        logger.info(f"Loading evaluation metrics from: {path.name}")
+
+        if not path.exists():
+            logger.warning("Evaluation metrics not found (optional)")
+            return None
+
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                metrics = json.load(f)
+
+            # Transform keys to match API schema (lowercase)
+            formatted_metrics = {
+                "accuracy": metrics.get("Accuracy"),
+                "precision": metrics.get("Precision"),
+                "recall": metrics.get("Recall"),
+                "f1_score": metrics.get("F1")
+            }
+
+            logger.info("Evaluation metrics loaded successfully")
+            return {"test_metrics": formatted_metrics}
+        except Exception as e:
+            logger.warning(f"Failed to load evaluation metrics: {e}")
+            return None
+
     def get_model_info(self) -> dict[str, Any]:
         """
         Get comprehensive model information.
@@ -220,6 +266,10 @@ class ModelLoader:
         if self.training_config:
             info["training_date"] = self.training_config.get("training_date")
             info["model_name"] = self.training_config.get("model_name")
+
+        # Fallback to model_info_data if training_config doesn't have model_name
+        if not info.get("model_name") and self.model_info_data:
+            info["model_name"] = self.model_info_data.get("model_name")
 
         # Add evaluation metrics if available
         if self.evaluation_results:

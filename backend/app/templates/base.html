@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>{% block title %}Early Stunting Risk AI{% endblock %}</title>
+    <title>{% block title %}StuntRisk AI{% endblock %}</title>
 
-    <meta name="description" content="Sistem prediksi risiko stunting dini menggunakan AI untuk membantu tenaga kesehatan dalam deteksi dan intervensi awal.">
-    <meta name="keywords" content="stunting, AI, machine learning, healthcare, prediksi risiko, kesehatan anak">
-    <meta name="author" content="Early Stunting Risk AI">
+    <meta name="description" content="Platform Artificial Intelligence untuk Early Stunting Risk Prediction menggunakan Machine Learning dan Explainable AI.">
+    <meta name="keywords" content="stunting, AI, machine learning, healthcare, prediksi risiko, kesehatan anak, explainable AI, SHAP">
+    <parameter name="author" content="StuntRisk AI">
 
     <!-- Tailwind CSS Output (compiled) -->
     <link rel="stylesheet" href="{{ url_for('static', path='/css/output.css') }}">
@@ -19,8 +19,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Favicon (placeholder) -->
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', path='/icons/favicon.ico') }}">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', path='/images/logo.png') }}">
 
     {% block extra_css %}{% endblock %}
 </head>
@@ -34,11 +34,9 @@
             <div class="flex justify-between items-center h-16">
                 <!-- Logo & Brand -->
                 <div class="flex items-center">
-                    <a href="/" class="flex items-center space-x-2 text-emerald-600 hover:text-emerald-700 transition-colors">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <span class="font-semibold text-lg">Stunting Risk AI</span>
+                    <a href="/" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+                        <img src="{{ url_for('static', path='/images/logo.png') }}" alt="StuntRisk AI Logo" class="h-10 w-auto">
+                        <span class="font-semibold text-lg text-gray-900">StuntRisk AI</span>
                     </a>
                 </div>
 
@@ -87,9 +85,12 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- About Section -->
                 <div>
-                    <h3 class="text-white font-semibold text-lg mb-4">Early Stunting Risk AI</h3>
+                    <h3 class="text-white font-semibold text-lg mb-4">StuntRisk AI</h3>
                     <p class="text-sm text-gray-400 leading-relaxed">
-                        Sistem prediksi risiko stunting dini menggunakan Machine Learning untuk membantu tenaga kesehatan dalam deteksi dan intervensi awal.
+                        Platform Artificial Intelligence untuk Early Stunting Risk Prediction menggunakan Machine Learning dan Explainable AI.
+                    </p>
+                    <p class="text-sm text-emerald-400 font-medium mt-2">
+                        Predict Early. Prevent Better.
                     </p>
                 </div>
 
@@ -117,7 +118,7 @@
 
             <!-- Copyright -->
             <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-500">
-                <p>&copy; 2024 Early Stunting Risk AI. Built with FastAPI & Machine Learning.</p>
+                <p>&copy; 2026 StuntRisk AI. Built with FastAPI & Machine Learning.</p>
             </div>
         </div>
         {% endblock %}
