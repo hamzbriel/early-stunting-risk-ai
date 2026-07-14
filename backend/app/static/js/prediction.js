@@ -14,17 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function handleSubmit(e) {
         e.preventDefault();
-
-        // Show loading state
         setLoadingState(true);
 
         try {
-            // Collect form data
             const formData = new FormData(form);
             const data = {};
-
             for (const [key, value] of formData.entries()) {
-                // Convert numeric strings to numbers
                 if (['age_month', 'mother_age', 'mother_working', 'father_working',
                      'clean_water', 'electricity', 'exclusive_breastfeeding',
                      'diarrhea_history'].includes(key)) {
@@ -36,41 +31,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Send to API
             const response = await fetch('/predict', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.detail || error.message || 'Prediction failed');
+                throw new Error(error.detail || 'Prediction failed');
             }
 
             const result = await response.json();
-
-            // Store result in sessionStorage
             sessionStorage.setItem('prediction_result', JSON.stringify(result));
-
-            // Redirect to result page
             window.location.href = '/result';
-
         } catch (error) {
-            console.error('Prediction error:', error);
-
-            // Show error toast
-            if (window.App && window.App.showToast) {
-                App.showToast(
-                    `Gagal melakukan prediksi: ${error.message}`,
-                    'error'
-                );
-            } else {
-                alert(`Error: ${error.message}`);
-            }
-
+            alert(`Error: ${error.message}`);
             setLoadingState(false);
         }
     }

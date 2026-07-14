@@ -173,12 +173,74 @@ async def about_page(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})
 
 
+from types import SimpleNamespace
+from fastapi import FastAPI, Request, status, Form
+from fastapi.responses import JSONResponse, RedirectResponse
+
+
 @app.get("/result", tags=["Pages"], include_in_schema=False)
 async def result_page(request: Request):
     """
-    Result page - Displays prediction results (populated via JavaScript from sessionStorage).
+    Result page - Displays prediction results.
     """
-    return templates.TemplateResponse("result.html", {"request": {}})
+    return templates.TemplateResponse("result.html", {"request": request, "result": None})
+
+@app.post("/predict-and-show", tags=["Prediction"], include_in_schema=False)
+async def predict_and_show(request: Request,
+                           age_month: int = Form(...),
+                           gender: str = Form(...),
+                           birth_weight: float = Form(...),
+                           birth_length: float = Form(...),
+                           mother_age: int = Form(...),
+                           mother_education: str = Form(...),
+                           mother_working: int = Form(...),
+                           father_education: str = Form(...),
+                           father_working: int = Form(...),
+                           family_income: str = Form(...),
+                           sanitation: str = Form(...),
+                           clean_water: int = Form(...),
+                           electricity: int = Form(...),
+                           house_density: str = Form(...),
+                           exclusive_breastfeeding: int = Form(...),
+                           protein_intake: str = Form(...),
+                           vitamin_intake: str = Form(...),
+                           immunization: str = Form(...),
+                           diarrhea_history: int = Form(...),
+                           healthcare_access: str = Form(...)):
+    """
+    Handle form submission, perform prediction, and render result page.
+    """
+    from app.schemas.request import PredictionRequest
+    from app.core.predictor import get_predictor
+
+    pred_request = PredictionRequest(
+        age_month=age_month,
+        gender=gender,
+        birth_weight=birth_weight,
+        birth_length=birth_length,
+        mother_age=mother_age,
+        mother_education=mother_education,
+        mother_working=mother_working,
+        father_education=father_education,
+        father_working=father_working,
+        family_income=family_income,
+        sanitation=sanitation,
+        clean_water=clean_water,
+        electricity=electricity,
+        house_density=house_density,
+        exclusive_breastfeeding=exclusive_breastfeeding,
+        protein_intake=protein_intake,
+        vitamin_intake=vitamin_intake,
+        immunization=immunization,
+        diarrhea_history=diarrhea_history,
+        healthcare_access=healthcare_access
+    )
+
+    predictor = get_predictor()
+    result = predictor.predict(pred_request)
+    print(f"DEBUG: Prediksi berhasil untuk usia {pred_request.age_month}")
+
+    return templates.TemplateResponse("result.html", {"request": request, "result": result})
 
 
 @app.get("/api", tags=["Root"])
