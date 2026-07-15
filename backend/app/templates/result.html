@@ -5,27 +5,52 @@
 {% endblock %}
 
 {% block content %}
-<div class="bg-gray-50 py-12">
-    <div class="container mx-auto px-4 max-w-2xl">
+<div class="bg-gray-50 py-12 min-h-screen">
+    <div class="container mx-auto px-4 max-w-4xl">
         <div id="loading-message" class="text-center py-20 text-xl font-semibold">Memuat hasil prediksi...</div>
 
-        <div id="result-content" class="hidden bg-white p-8 rounded-xl shadow-lg">
-            <h1 class="text-2xl font-bold mb-4">Hasil Prediksi</h1>
-            <div class="mb-6">
-                <span class="text-sm text-gray-500">Tingkat Risiko:</span>
-                <div id="res-prediction" class="text-4xl font-bold text-emerald-600"></div>
-                <div id="res-confidence" class="text-lg text-gray-700"></div>
+        <div id="result-content" class="hidden">
+            <!-- Main Prediction Card - Centered and Highlighted -->
+            <div class="bg-white p-8 rounded-2xl shadow-xl mb-6 text-center border-t-4" id="prediction-card">
+                <h1 class="text-xl font-semibold text-gray-600 mb-4">Hasil Prediksi Risiko Stunting</h1>
+
+                <div class="mb-6">
+                    <div id="res-prediction" class="text-6xl font-extrabold mb-3"></div>
+                    <div class="text-2xl font-bold">
+                        <span id="res-confidence"></span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Tingkat Kepercayaan</p>
+                </div>
             </div>
 
-            <h2 class="font-semibold mb-2">Probabilitas</h2>
-            <div id="res-probabilities" class="mb-6"></div>
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <!-- Probabilities Card -->
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        Probabilitas per Kategori
+                    </h2>
+                    <div id="res-probabilities"></div>
+                </div>
 
-            <h2 class="font-semibold mb-2">Rekomendasi</h2>
-            <p id="res-recommendation" class="text-gray-700 italic"></p>
+                <!-- Recommendations Card -->
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                        </svg>
+                        Rekomendasi Tindakan
+                    </h2>
+                    <ul id="res-recommendation" class="space-y-2 text-gray-700"></ul>
+                </div>
+            </div>
 
-            <div class="mt-8 flex gap-4">
-                <a href="/prediction" class="btn btn-primary flex-1 text-center">Prediksi Lagi</a>
-                <a href="/" class="btn btn-outline flex-1 text-center">Kembali ke Beranda</a>
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
+                <a href="/prediction" class="btn btn-primary flex-1 text-center py-3 text-lg font-semibold">Prediksi Lagi</a>
+                <a href="/" class="btn btn-outline flex-1 text-center py-3 text-lg font-semibold">Kembali ke Beranda</a>
             </div>
         </div>
     </div>
