@@ -12,7 +12,7 @@
     <parameter name="author" content="StuntRisk AI">
 
     <!-- Tailwind CSS Output (compiled) -->
-    <link rel="stylesheet" href="{{ url_for('static', path='/css/output.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/output.css') }}">
 
     <!-- Google Fonts - Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ url_for('static', path='/images/logo.png') }}">
+    <link rel="icon" href="{{ url_for('static', path='images/logo.png') }}?v=1">
+    <link rel="shortcut icon" href="{{ url_for('static', path='images/logo.png') }}?v=1">
+    <link rel="apple-touch-icon" href="{{ url_for('static', path='images/logo.png') }}">
 
     {% block extra_css %}{% endblock %}
 </head>
@@ -35,7 +37,7 @@
                 <!-- Logo & Brand -->
                 <div class="flex items-center">
                     <a href="/" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-                        <img src="{{ url_for('static', path='/images/logo.png') }}" alt="StuntRisk AI Logo" class="h-10 w-auto">
+                        <img src="{{ url_for('static', path='images/logo.png') }}" alt="StuntRisk AI Logo" class="h-10 w-auto">
                         <span class="font-semibold text-lg text-gray-900">StuntRisk AI</span>
                     </a>
                 </div>
@@ -124,9 +126,8 @@
         {% endblock %}
     </footer>
 
-    <!-- Global JavaScript -->
-    <script src="{{ url_for('static', path='/js/app.js') }}"></script>
-
+    <!-- Main Scripts -->
+    <script src="{{ url_for('static', path='js/app.js') }}"></script>
     {% block extra_js %}{% endblock %}
 
     <!-- Mobile Menu Toggle Script (inline for base functionality) -->

@@ -256,7 +256,7 @@ class ModelLoader:
             Dictionary containing model metadata, configuration, and metrics
         """
         info: dict[str, Any] = {
-            "model_type": type(self.model).__name__,
+            "model_type": "Pipeline",  # Default jika training_config tidak ada
             "num_features": len(self.feature_names),
             "num_classes": len(self.label_encoder.classes_),
             "classes": self.label_encoder.classes_.tolist(),
@@ -264,6 +264,7 @@ class ModelLoader:
 
         # Add training config if available
         if self.training_config:
+            info["model_type"] = self.training_config.get("model_type", "Pipeline")
             info["training_date"] = self.training_config.get("training_date")
             info["model_name"] = self.training_config.get("model_name")
 

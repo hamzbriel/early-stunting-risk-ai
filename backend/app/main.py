@@ -178,6 +178,11 @@ from fastapi import FastAPI, Request, status, Form
 from fastapi.responses import JSONResponse, RedirectResponse
 
 
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return RedirectResponse(url=app.url_path_for("static", path="images/logo.png"))
+
+
 @app.get("/result", tags=["Pages"], include_in_schema=False)
 async def result_page(request: Request):
     """
