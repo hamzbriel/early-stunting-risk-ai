@@ -1,0 +1,56 @@
+[
+    {
+        "Model":"CatBoost",
+        "Accuracy Mean":0.8891428571,
+        "Accuracy Std":0.0057746808,
+        "Precision Mean":0.8892447978,
+        "Recall Mean":0.8891428571,
+        "F1 Mean":0.8885806203,
+        "F1 Std":0.0055071888
+    },
+    {
+        "Model":"Logistic Regression",
+        "Accuracy Mean":0.8878571429,
+        "Accuracy Std":0.0105075289,
+        "Precision Mean":0.8882135323,
+        "Recall Mean":0.8878571429,
+        "F1 Mean":0.8874039411,
+        "F1 Std":0.0103132777
+    },
+    {
+        "Model":"LightGBM",
+        "Accuracy Mean":0.8848571429,
+        "Accuracy Std":0.0035398605,
+        "Precision Mean":0.8848291506,
+        "Recall Mean":0.8848571429,
+        "F1 Mean":0.8842962166,
+        "F1 Std":0.0032475845
+    },
+    {
+        "Model":"XGBoost",
+        "Accuracy Mean":0.8828571429,
+        "Accuracy Std":0.0047595232,
+        "Precision Mean":0.8827021572,
+        "Recall Mean":0.8828571429,
+        "F1 Mean":0.8824029823,
+        "F1 Std":0.0045663223
+    },
+    {
+        "Model":"Random Forest",
+        "Accuracy Mean":0.877,
+        "Accuracy Std":0.0060169828,
+        "Precision Mean":0.8780392775,
+        "Recall Mean":0.877,
+        "F1 Mean":0.8752631396,
+        "F1 Std":0.0060008931
+    },
+    {
+        "Model":"Extra Trees",
+        "Accuracy Mean":0.8694285714,
+        "Accuracy Std":0.005447336,
+        "Precision Mean":0.8697190204,
+        "Recall Mean":0.8694285714,
+        "F1 Mean":0.8681090172,
+        "F1 Std":0.0053542195
+    }
+]

@@ -81,7 +81,7 @@ secrets/
 # model/artifacts/*
 !model/artifacts/.gitkeep
 
-model/metrics/*
+# model/metrics/*
 !model/metrics/.gitkeep
 
 model/figures/*
